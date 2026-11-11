@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "offline-test",
+      "trigger": "PostTaskExec",
+      "action": {
+        "type": "command",
+        "command": "if [ -f core/package.json ]; then pnpm -C core test --run 2>&1 | tail -40; else echo 'offline-test: core/ not scaffolded yet, skipping'; fi"
+      }
+    }
+  ]
+}
