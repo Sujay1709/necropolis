@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "analyzer-saved",
+      "description": "When the agent saves an analyzer in core/src/analyzers/, check that it is exported from analyzers/index.ts and has a test file. Prints findings for the agent; never blocks.",
+      "trigger": "PostFileSave",
+      "matcher": "core/src/analyzers/.*\\.ts$",
+      "action": {
+        "type": "command",
+        "command": "node scripts/hooks/analyzer-saved.mjs"
+      },
+      "timeout": 20
+    }
+  ]
+}

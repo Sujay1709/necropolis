@@ -1,30 +1,8 @@
-# Dependencies
 node_modules/
-.pnpm-store/
-
-# Build output
 dist/
-build/
-*.tsbuildinfo
-
-# Test / coverage output
 coverage/
-*.lcov
-
-# Logs
 *.log
-npm-debug.log*
-pnpm-debug.log*
-
-# Editor / OS
 .DS_Store
-.idea/
-*.swp
-
-# Environment
-.env
-.env.local
-
-# IMPORTANT: .kiro/ is intentionally NOT ignored.
-# Steering, specs, hooks, and agents are committed and judged.
-# Do not add .kiro to this file.
+# generated demo repo (regenerate with: npm run sample-repo)
+examples/sample-repo/out/
+# NOTE: .kiro/ is intentionally committed. It is part of the hackathon submission.

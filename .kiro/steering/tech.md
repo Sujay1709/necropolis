@@ -1,52 +1,38 @@
-# Tech — NECROPOLIS
+---
+inclusion: always
+---
+
+# Necropolis: tech
 
 ## Stack
-- **Language:** TypeScript (strict), targeting **Node 22**.
-- **Package manager / monorepo:** pnpm workspaces.
-- **Testing:** Vitest. Property-based tests with **fast-check**.
-- **Graveyard front end:** Vite + React + hand-written **SVG** (no heavy chart
-  library). Must build to a **static site** that deploys anywhere.
-- **Exorcist:** a Kiro Crew app (`app.json` + agents + skills) *and* a
-  standalone CLI (`necropolis exorcist scan|exorcise`).
-- **Dependencies:** prefer very few. Justify any new runtime dependency.
 
-## Hard rules (non-negotiable)
-1. **New code only. MIT licensed. Public-repo ready.** No copied code with
-   incompatible licenses.
-2. **`.kiro/` is committed and never gitignored.** It is judged. Steering,
-   specs, hooks, and agents must show real usage, not decoration.
-3. **Do not invent Kiro facts.** Never guess Kiro config formats, hook trigger
-   names, agent field names, limits, or Crew `app.json` fields from memory.
-   Verify against the current official docs at **kiro.dev/docs** before writing
-   any `.kiro` file, hook, agent, or Crew manifest. If something can't be
-   verified, say so and mark it **TODO** rather than guessing. Exorcist's rules
-   depend on these facts, so a wrong guess makes the product wrong.
-4. **Analyzers run fully offline.** No network calls in any analyzer. Everything
-   must work on the bundled sample repo.
-5. **Honest scope.** If a feature isn't working, mark it in the README. Never
-   fabricate output.
+- **Language:** TypeScript, strict mode. ES modules only (`"type": "module"`).
+- **Runtime:** Node.js 22 or newer. No other runtimes.
+- **Package manager:** npm workspaces (`core`, `apps/*`, `mcp`). Do not add pnpm or yarn files.
+- **Tests:** Vitest. Property-based tests use `fast-check`. Test files live in `<package>/test/**/*.test.ts` and repo-level checks in `tests/`.
+- **Graveyard UI:** Vite + React + hand-written SVG. No charting library. Must build to a static site (`vite build`) with no server.
+- **Exorcist:** a Kiro Crew app (`app.json`, `agents/`, `skills/`) and a standalone CLI entry point. The CLI must work without Crew installed.
+- **Git access:** shell out to the `git` binary with `child_process`. Do not add a git library.
 
-## Determinism
-- `score(hauntings)` is deterministic, documented, and **monotonic**: adding a
-  haunting, or increasing any haunting's severity, never lowers the score.
-- Analyzers must produce stable, reproducible output on the sample repo (which
-  is generated with a seeded git history) so demos and tests repeat exactly.
+## Rules
 
-## Verified Kiro facts (as of 2026-11-11, kiro.dev/docs)
-- **Specs** live in `.kiro/specs/<name>/` as `requirements.md`, `design.md`,
-  `tasks.md` (bugfix specs use `bugfix.md`). Requirements use EARS notation.
-- **Standalone hooks** live in `.kiro/hooks/*.json`. Triggers are PascalCase
-  (e.g. `PreToolUse`, `PostToolUse`, `SessionStart`, `PostTaskExec`). Actions
-  are `{ "type": "command" | "agent", ... }`. Exit 0 → stdout added to context;
-  non-zero → stderr shown and the action may be blocked.
-- **Custom agents** live in `.kiro/agents/` as `.md` (YAML frontmatter + prompt
-  body) or `.json`. Fields include `name`, `description`, `tools`,
-  `permissions.rules`, `resources`, `model`. **Resource limit:** an agent loads
-  at most **32 `file://` resource files** and **100,000 characters** total;
-  a single file over **1 MiB** is skipped and over **50,000 characters** is
-  truncated. (Exorcist's "over-budget" analyzer keys off these numbers.)
-- **Crew app manifest** is `app.json` with `name` (kebab-case), `version`
-  (semver), `displayName`, `description`, plus optional `agents`, `skills`,
-  `mcpServers`, `crons`, `ui`, `permissions`.
+1. **Few dependencies.** Before adding a package, say why Node's standard library is not enough. Prefer `node:fs`, `node:path`, `node:child_process`, `node:crypto`.
+2. **Offline.** Analyzers make no network calls. Tests make no network calls.
+3. **Deterministic.** Same input repo, same output. Sort results; never depend on object key order or wall-clock time except where the input explicitly carries dates.
+4. **Core is app-agnostic.** `core/` must not import from `apps/` or `mcp/`, and must not import React, Vite, or anything Crew-specific.
+5. **Verify Kiro facts; never guess them.** Exorcist's rules encode what a valid `.kiro/` looks like. Every rule must cite the doc URL it came from (see `docs/kiro-verification.md`). If a fact cannot be verified against https://kiro.dev/docs, mark it `TODO(verify)` and do not ship the rule as a hard error.
+6. **Tests before done.** A task is finished when its tests pass under `npm test`. Property tests must cover the two invariants in the core spec (score monotonicity and spec-writer subject round-trip).
+7. **No secrets anywhere.** Steering, hooks, and agents are committed. Nothing in `.kiro/` may contain a token or key.
 
-See `.kiro/steering/structure.md` for layout rules.
+## Commands
+
+```bash
+npm install            # once
+npm test               # all tests
+npm run typecheck      # tsc on core
+npm run sample-repo    # regenerate examples/sample-repo/out (a git repo with seeded history)
+```
+
+## Verified Kiro facts used by this project
+
+Kept in `docs/kiro-verification.md` with URLs and the date checked. Read it before writing any file under `.kiro/`.

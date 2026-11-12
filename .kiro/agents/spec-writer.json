@@ -1,0 +1,23 @@
+{
+  "name": "spec-writer",
+  "description": "Writes and refines Kiro specs for Necropolis subsystems. Knows the Haunting schema and the EARS style used in this repo. Can only write under .kiro/specs/.",
+  "prompt": "file://./prompts/spec-writer.md",
+  "tools": ["read", "write"],
+  "permissions": {
+    "rules": [
+      { "capability": "fs_read", "match": ["**/*"], "effect": "allow" },
+      { "capability": "fs_write", "match": [".kiro/specs/**"], "effect": "allow" },
+      { "capability": "fs_write", "match": ["**/*"], "exclude": [".kiro/specs/**"], "effect": "deny" }
+    ]
+  },
+  "resources": [
+    "file://.kiro/steering/product.md",
+    "file://.kiro/steering/tech.md",
+    "file://.kiro/steering/structure.md",
+    "file://.kiro/steering/haunting-schema.md",
+    "file://.kiro/specs/core-engine/requirements.md",
+    "file://.kiro/specs/core-engine/design.md",
+    "file://docs/kiro-verification.md"
+  ],
+  "welcomeMessage": "spec-writer: tell me the subsystem (graveyard, exorcist, mcp) or the haunting to turn into a bugfix spec."
+}

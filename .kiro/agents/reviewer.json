@@ -1,0 +1,22 @@
+{
+  "name": "reviewer",
+  "description": "Read-only reviewer. Checks a change against the steering rules, the Haunting schema, and the spec it claims to implement. Runs tests but cannot edit files.",
+  "prompt": "file://./prompts/reviewer.md",
+  "tools": ["read", "shell"],
+  "permissions": {
+    "rules": [
+      { "capability": "fs_read", "match": ["**/*"], "effect": "allow" },
+      { "capability": "fs_write", "match": ["**/*"], "effect": "deny" },
+      { "capability": "shell", "match": ["npm test*", "npm run typecheck*", "git diff*", "git log*", "git status*"], "effect": "allow" },
+      { "capability": "shell", "match": ["*"], "effect": "deny" }
+    ]
+  },
+  "resources": [
+    "file://.kiro/steering/product.md",
+    "file://.kiro/steering/tech.md",
+    "file://.kiro/steering/structure.md",
+    "file://.kiro/steering/haunting-schema.md",
+    "file://docs/kiro-verification.md"
+  ],
+  "welcomeMessage": "reviewer: paste the task number or say 'review the diff'. I report findings; I do not fix them."
+}

@@ -1,52 +1,41 @@
-# Structure — NECROPOLIS
+---
+inclusion: always
+---
 
-## Repository layout
+# Necropolis: structure
+
 ```
 .kiro/
-  steering/      product.md, tech.md, structure.md   (this folder)
-  specs/         one folder per spec (requirements.md, design.md, tasks.md)
-  hooks/         standalone *.json hooks
-  agents/        custom agent definitions
-core/            analyzer contract, Haunting schema, scoring, spec writer
+  steering/          product.md, tech.md, structure.md (always), haunting-schema.md (fileMatch core/**)
+  specs/             one folder per subsystem: core-engine, graveyard, exorcist, ...
+  hooks/             on-analyzer-save.json, on-stop-tests.json
+  agents/            spec-writer.json, reviewer.json (+ prompts/)
+core/                the skeleton. Published as @necropolis/core (workspace only)
+  src/
+    index.ts         public API re-exports
+    haunting.ts      Haunting type, kinds, validation
+    analyzer.ts      Analyzer contract + registry
+    score.ts         haunting score
+    spec-writer.ts   Haunting[] -> .kiro/specs/<slug>/ files
+    analyzers/       one file per analyzer, exported from analyzers/index.ts
+  test/              mirrors src/, plus properties.test.ts
 apps/
-  graveyard/     web app (Vite + React + SVG). Static deploy.
-  exorcist/      Crew app (app.json, agents, skills) + CLI entry
-mcp/             OPTIONAL, LAST: MCP server exposing core to Kiro
-examples/
-  sample-repo/   script that generates a small repo with seeded git history
-LICENSE
-README.md        starts with a 60-second "judge path"
+  graveyard/         Vite + React static site (Phase 3)
+  exorcist/          Crew app + CLI (Phase 4)
+mcp/                 optional MCP server exposing core (Phase 5, only if time remains)
+examples/sample-repo/
+  generate.mjs       builds a demo git repo with seeded history and a haunted .kiro/
+  out/               generated, gitignored
+scripts/hooks/       commands run by .kiro/hooks
+tests/               repo-level checks (Kiro config validity, spec structure, sample repo)
+docs/                kiro-verification.md, decisions
 ```
 
-## The one rule that matters: the core stays app-agnostic
-`core/` must not import from `apps/graveyard/` or `apps/exorcist/`, and must
-not know either app exists. Dependencies point **inward only**:
+## Conventions
 
-```
-apps/graveyard  ─┐
-                 ├─>  core   (never the reverse)
-apps/exorcist   ─┘
-mcp             ─┘
-```
-
-Concretely:
-- `core/` owns the shared contract: the **Haunting** schema, the **Analyzer**
-  interface, the analyzer **registry**, **scoring**, and the **spec writer**.
-- `core/` has **no** DOM, React, CLI-arg parsing, or Crew-specific code.
-- An app contributes value only by (a) choosing which analyzers to register and
-  (b) presenting the resulting `Haunting[]`. Graveyard draws them; Exorcist
-  scores and reports them. Neither forks the pipeline.
-- Analyzers depend only on `{ rootDir }` and the filesystem/git — never on an
-  app. This is what makes the same analyzer usable from either app.
-
-If a change requires `core/` to import an app, the design is wrong — push the
-shared piece down into `core/` instead.
-
-## Naming & conventions
-- TypeScript strict everywhere. Node 22, ESM modules.
-- One analyzer per file under the owning app, each exporting an
-  `Analyzer`-shaped object; registration is explicit in the app entry point.
-- Spec folder slugs are kebab-case and derived deterministically from a
-  haunting (so re-running is idempotent).
-- Tests live next to the code (`*.test.ts`); property-based tests use
-  fast-check and are named `*.prop.test.ts`.
+- **Files:** kebab-case (`spec-writer.ts`). **Types:** PascalCase. **Functions and variables:** camelCase. **Haunting kinds:** kebab-case string literals.
+- **One analyzer per file.** Each analyzer exports a single `Analyzer` object named `<name>Analyzer` and is listed in `core/src/analyzers/index.ts`. The `on-analyzer-save` hook checks this.
+- **Each analyzer has a test file** at `core/test/analyzers/<name>.test.ts` that runs it against a fixture directory under `core/test/fixtures/`.
+- **Imports:** relative within a package; `@necropolis/core` from apps and mcp. Core imports nothing from apps or mcp.
+- **Specs name the code they produce.** Every task in `tasks.md` names the files it creates or changes, so spec drift can be detected mechanically.
+- **Generated things are gitignored** (`dist/`, `coverage/`, `examples/sample-repo/out/`). `.kiro/` is never gitignored.

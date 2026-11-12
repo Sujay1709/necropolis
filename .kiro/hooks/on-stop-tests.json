@@ -1,0 +1,23 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "tests-before-stop",
+      "description": "When the agent finishes a turn that touched code, offer to run the test suite so a task is not reported done with red tests.",
+      "trigger": "Stop",
+      "action": {
+        "type": "command",
+        "command": "npm test --silent"
+      },
+      "timeout": 180,
+      "confirm": {
+        "question": "Run npm test before finishing this turn?",
+        "confirmCommand": "node scripts/hooks/should-run-tests.mjs",
+        "options": [
+          { "id": "run", "label": "Run the tests", "run": true },
+          { "id": "skip", "label": "Skip this time", "run": false }
+        ]
+      }
+    }
+  ]
+}
