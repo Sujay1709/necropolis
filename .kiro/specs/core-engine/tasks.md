@@ -23,13 +23,13 @@ later ones. Check off a task only when its tests pass offline.
     filesystem-safe; different subjects → different ids.
   - _Requirements: 1.4, 5.2_
 
-- [ ] 4. Analyzer contract (`core/src/analyzer.ts`)
+- [x] 4. Analyzer contract (`core/src/analyzer.ts`)
   - Define `AnalyzerContext` and `Analyzer` interfaces; no implementation.
   - Verify (type-level): a sample in-memory analyzer satisfies the interface
     and compiles under strict mode.
   - _Requirements: 2.1, 2.2_
 
-- [ ] 5. Registry with isolation + ordering (`core/src/registry.ts`)
+- [x] 5. Registry with isolation + ordering (`core/src/registry.ts`)
   - `register` (dup-name guard), `run` returning `{ hauntings, errors }`,
     deterministic sort (`kind`→`subject`→`id`), per-haunting `validateHaunting`.
   - Verify (unit): merges multiple analyzers; one throwing analyzer is captured

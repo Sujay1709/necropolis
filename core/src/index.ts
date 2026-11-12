@@ -26,3 +26,12 @@ export {
   slugFor,
   type HauntingIdParts,
 } from "./slug.js";
+
+export type { Analyzer, AnalyzerContext } from "./analyzer.js";
+
+export {
+  Registry,
+  createRegistry,
+  type AnalyzerError,
+  type RunResult,
+} from "./registry.js";
