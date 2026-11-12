@@ -1,0 +1,21 @@
+{
+  "name": "necropolis",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A shared core engine that finds codebase 'hauntings' and turns them into Kiro specs. Kiroween 2026 - Skeleton Crew.",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "packageManager": "pnpm@12.18.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "@types/node": "^26.6.6"
+  }
+}
