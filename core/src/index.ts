@@ -3,9 +3,26 @@
 // The core is app-agnostic: it must not import from apps/* or mcp/.
 // It owns the shared pipeline: Analyzer[] -> Haunting[] -> score() / specWriter().
 //
-// Modules are filled in by the Phase 2 tasks (schema, analyzer contract,
-// registry, scoring, spec writer). This placeholder keeps the package
-// resolvable and type-checkable from task 1 onward.
+// Remaining modules (analyzer contract, registry, scoring, spec writer) are
+// filled in by the later Phase 2 tasks.
 
-/** Package marker; replaced by real exports as tasks land. */
+/** Package marker. */
 export const CORE_PACKAGE = "@necropolis/core";
+
+export {
+  HAUNTING_KINDS,
+  HauntingValidationError,
+  isHaunting,
+  isHauntingKind,
+  validateHaunting,
+  type Haunting,
+  type HauntingKind,
+} from "./haunting.js";
+
+export {
+  hauntingId,
+  kebab,
+  shortHash,
+  slugFor,
+  type HauntingIdParts,
+} from "./slug.js";

@@ -11,13 +11,13 @@ later ones. Check off a task only when its tests pass offline.
   - Verify: `pnpm install` succeeds; `pnpm -C core test` runs (0 tests OK).
   - _Requirements: tech stack; 6.4_
 
-- [ ] 2. Haunting schema + validation (`core/src/haunting.ts`)
+- [x] 2. Haunting schema + validation (`core/src/haunting.ts`)
   - Define `HauntingKind`, `Haunting`, `validateHaunting`, `isHaunting`.
   - Verify (unit): accepts a valid haunting; rejects bad `kind`, `severity`
     out of `[0,1]`, missing fields — error names the offending field.
   - _Requirements: 1.1, 1.2, 1.3_
 
-- [ ] 3. Stable id/slug helpers (`core/src/slug.ts`)
+- [x] 3. Stable id/slug helpers (`core/src/slug.ts`)
   - `shortHash(s)`, `hauntingId({analyzer,kind,subject})`, `slugFor(input)`.
   - Verify (unit): same input → same id/slug; slugs are kebab-case and
     filesystem-safe; different subjects → different ids.
