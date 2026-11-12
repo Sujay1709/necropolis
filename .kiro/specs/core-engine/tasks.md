@@ -3,7 +3,7 @@
 Each task is small, independently testable, and ordered so earlier tasks unblock
 later ones. Check off a task only when its tests pass offline.
 
-- [ ] 1. Scaffold pnpm workspace + `core` package
+- [x] 1. Scaffold pnpm workspace + `core` package
   - Root `package.json` with pnpm workspaces; `pnpm-workspace.yaml` listing
     `core`, `apps/*`, `examples/*`.
   - `core/package.json` (ESM, type: module), strict `tsconfig.json`, Vitest
